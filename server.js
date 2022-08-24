@@ -27,13 +27,12 @@ app.post('/sendFrame', function(req, res){
 
     const image = base64_to_tensor.convert(base64Data);
 
-    console.log(image);
 
     const poses = net.estimateMultiplePoses(image, {
         maxDetections: 40,
         nmsRadius: 100
     }).then(function(poses){
-        console.log(poses);
+        console.log(new Date());
         res.end(JSON.stringify(poses));
     });
 
@@ -55,5 +54,4 @@ net = posenet.load({
     console.log("Simple static server listening at http://" + hostname + ":" + port);
     app.listen(port);
   });
-    console.log(net);
 

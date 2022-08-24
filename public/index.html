@@ -13,7 +13,6 @@
 
     <div id="resMsg"></div>
 
-
 </div>
 
 <!--
@@ -74,7 +73,6 @@ function getFrame(){
     var video = document.getElementById('gum-local');
     ctx.drawImage(video, 0, 0, 320, 240);
     var dataURL = canvas.toDataURL('image/jpeg');
-    console.log(dataURL);
 
           
    var fd = new FormData();
@@ -87,9 +85,8 @@ function getFrame(){
       if (xhr.readyState != 4) { return; }
       // callback logic
         var results = JSON.parse(xhr.responseText);
- //       document.getElementById('resMsg').innerHTML = xhr.responseText;
-              document.getElementById('resMsg').innerHTML += new Date() + "<br>";
-        console.log(results);
+        document.getElementById('resMsg').innerHTML = xhr.responseText;
+ //             document.getElementById('resMsg').innerHTML += new Date() + "<br>";
 
     };
     xhr.open("POST", "/sendFrame", true);
