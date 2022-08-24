@@ -37,7 +37,6 @@ app.post('/sendFrame', function(req, res){
         res.end(JSON.stringify(poses));
     });
 
-    res.end('ok');
     
 });
 
