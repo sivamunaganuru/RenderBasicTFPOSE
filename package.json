@@ -4,6 +4,9 @@
     "ws": "^8.2.3"
   },
   "devDependencies": {
+    "@tensorflow-models/posenet": "^2.2.2",
+    "@tensorflow/tfjs-node": "^3.20.0",
+    "base64-to-uint8array": "^1.0.0",
     "body-parser": "^1.20.0",
     "connect": "^3.7.0",
     "errorhandler": "^1.5.1",
