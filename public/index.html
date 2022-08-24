@@ -24,7 +24,7 @@
       // Put variables in global scope to make them available to the browser console.
 const constraints = window.constraints = {
   audio: false,
-  video: true
+  video: {width: {exact: 320}, height: {exact: 240}}
 };
 
 function handleSuccess(stream) {
@@ -34,7 +34,7 @@ function handleSuccess(stream) {
   console.log(`Using video device: ${videoTracks[0].label}`);
   window.stream = stream; // make variable available to browser console
   video.srcObject = stream;
-  setInterval("getFrame()", 1000/30);
+  setInterval(getFrame, 1000/30);
 }
 
 function handleError(error) {
@@ -69,15 +69,28 @@ async function init() {
 function getFrame(){
     var canvas = document.createElement('canvas');
     canvas.width = 320;
-    canvas.height = 200;
+    canvas.height = 240;
     var ctx = canvas.getContext('2d');
-    ctx.drawImage(document.querySelector('video'), 0, 0, 640, 480);
-    var dataURL = canvas.toDataURL('image/jpeg', 1.0);
+    var video = document.getElementById('gum-local');
+    ctx.drawImage(video, 0, 0, 320, 240);
+    var dataURL = canvas.toDataURL('image/png');
     console.log(dataURL);
 
-          loadURL("/sendFrame?data="+encodeURIComponent(dataURL), function(data) {
-            console.log(data);
-          });
+          
+   var fd = new FormData();
+   fd.append('data', encodeURIComponent(dataURL));
+ //  fd.append('date', (new Date()).toString());
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function(e) {  
+      if (xhr.readyState != 4) { return; }
+      // callback logic
+    };
+    xhr.open("POST", "/sendFrame", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send(fd);
+
 }
 
 

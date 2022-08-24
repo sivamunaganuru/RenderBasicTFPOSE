@@ -6,27 +6,31 @@ var errorHandler = require('errorhandler');
 var methodOverride = require('method-override');
 var hostname = process.env.HOSTNAME || 'localhost';
 var port = 8080;
-app.use(methodOverride());
+//app.use(methodOverride());
+//app.use(errorHandler());
 //app.use(bodyParser());
 //app.use(require('connect').bodyParser());
 
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.json());
 
-// parse application/json
-app.use(bodyParser.json())
+
+
 
 app.use(express.static(__dirname + '/public'));
-app.use(errorHandler());
 
 app.get("/", function (req, res) {
       res.redirect("/index.html");
 });
 
-app.get('/sendFrame', function(req, res){
-    console.log(req.query.data)
- //   var data = req.body.;
+app.post('/sendFrame', function(req, res){
+    var base64Data = req.body[Object.keys(req.body)[0]];
+    base64Data = base64Data.split("------")[0];
+    console.log(base64Data);
+    console.log()
+  //  var buf = new Buffer(req.body.data.replace(/^data:image\/\w+;base64,/, ""),'base64');
+    res.end('ok');
     
 });
 
