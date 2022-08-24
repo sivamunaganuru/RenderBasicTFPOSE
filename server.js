@@ -1,11 +1,14 @@
 const posenet = require('@tensorflow-models/posenet');
 const tfjs = require('@tensorflow/tfjs-node');
-toUint8Array = require('base64-to-uint8array');
+const toUint8Array = require('base64-to-uint8array');
+const base64_to_tensor = require('base64-to-tensor');
 
 var imageWidth = 320;
 var imageHeight = 240;
 
-  const net = posenet.load({
+/*
+var net = null;
+ net = posenet.load({
     architecture: "ResNet50",
     quantBytes: 1,
     outputStride: 16,
@@ -14,7 +17,7 @@ var imageHeight = 240;
       height: imageHeight * 2
     } 
   });
-
+*/
 
 
 var express = require("express");
@@ -44,7 +47,7 @@ app.get("/", function (req, res) {
 });
 
 app.post('/sendFrame', function(req, res){
-    var base64Data = req.body[Object.keys(req.body)[0]];
+    var base64Data = decodeURIComponent(req.body[Object.keys(req.body)[0]]);
     base64Data = base64Data.split("------")[0];
 
     /*
@@ -57,29 +60,56 @@ app.post('/sendFrame', function(req, res){
       const image = tfjs.node.decodeImage(b);
 */
 
-     const imageData = base64Data.replace('data:image/jpeg;base64','')
-              .replace('data:image/png;base64','');
     
-    const imageArray = toUint8Array(imageData);
-    
-    const tensor3d = tfjs.node.decodeJpeg( imageArray, numOfChannels );
+    const image = base64_to_tensor.convert(base64Data);
 
-    console.log(tensor3d);
+    console.log(image);
 
 
-
-    const poses = net.estimateMultiplePoses(image, {
-        maxDetections: 40,
-        nmsRadius: 100
+    applyNet(image).then(function(poses){
+        console.log(poses);
+        res.end(poses);
     });
-
-  console.log('got poses: ', poses.length);
 
 
     res.end('ok');
     
 });
 
+
+var net = null;
+
+async function loadTheNet(){
+    if(net == null){
+        net = await posenet.load({
+            architecture: "ResNet50",
+            quantBytes: 1,
+            outputStride: 16,
+            inputResolution: {
+              width: imageWidth * 2,
+              height: imageHeight * 2
+            } 
+          });
+    }
+    return net;
+}
+
+function applyNet(image) {
+    const net = loadTheNet();
+    if(net == null){
+        return null;
+    }
+    const poses = net.estimateMultiplePoses(image, {
+        maxDetections: 40,
+        nmsRadius: 100
+    }).then(function(poses){
+        return poses;
+    });
+
+}
+
+    net = loadTheNet();
+console.log(net);
 
 console.log("Simple static server listening at http://" + hostname + ":" + port);
 app.listen(port);
