@@ -4,7 +4,6 @@
   <title> 
     Server side pose-net
   </title>
-  <script src='asyncReq.js'></script>
 </head>
 <body>
     <div id="container">
@@ -19,7 +18,7 @@
 
         const constraints = window.constraints = {
           audio: false,
-          video: true //{width: {exact: imageWidth}, height: {exact: imageHeight}}
+          video: true 
         };
 
         function handleSuccess(stream) {
