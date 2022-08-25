@@ -14,9 +14,12 @@
 
 </body>
   <script>
+        var imageWidth = 320;
+        var imageHeight = 200;
+
         const constraints = window.constraints = {
           audio: false,
-          video: {width: {exact: 320}, height: {exact: 240}}
+          video: true //{width: {exact: imageWidth}, height: {exact: imageHeight}}
         };
 
         function handleSuccess(stream) {
@@ -60,11 +63,37 @@
 
         function getFrame(){
            var canvas = document.createElement('canvas');
-           canvas.width = 320;
-           canvas.height = 240;
+           canvas.width = imageWidth;
+           canvas.height = imageHeight;
            var ctx = canvas.getContext('2d');
            var video = document.getElementById('video');
-           ctx.drawImage(video, 0, 0, 320, 240);
+
+
+            var video_width = video.offsetWidth;
+            var video_height = video.offsetHeight;
+
+            var ratio = video_width / video_height;
+
+            var target_width; 
+            var target_height;
+            var y_of_video = 0;
+            var x_of_video = 0
+
+
+            if ( video_width > video_height ){
+                  target_width = canvas.width;
+                  target_height = canvas.width / ratio;  
+                  y_of_video = (canvas.height - target_height) / 2 ;
+            }else{
+              target_width = canvas.height;
+              target_height = canvas.height * ratio;
+              x_of_video = (c.width - target_width) / 2 ;
+            }
+
+
+
+          ctx.drawImage(video, x_of_video, y_of_video, target_width, target_height);
+          // ctx.drawImage(video, 0, 0, imageWidth, imageHeight);
            var dataURL = canvas.toDataURL('image/jpeg');
            var fd = new FormData();
            fd.append('data', encodeURIComponent(dataURL));

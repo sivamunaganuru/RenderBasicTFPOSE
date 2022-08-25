@@ -5,7 +5,7 @@ const toUint8Array = require('base64-to-uint8array');
 const base64_to_tensor = require('base64-to-tensor');
 
 var imageWidth = 320;
-var imageHeight = 240;
+var imageHeight = 200;
 
 var express = require("express");
 var app = express();
