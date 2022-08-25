@@ -24,10 +24,7 @@ app.use(express.static(__dirname + '/public'));
 app.post('/sendFrame', function(req, res){
     var base64Data = decodeURIComponent(req.body[Object.keys(req.body)[0]]);
     base64Data = base64Data.split("------")[0];
-
     const image = base64_to_tensor.convert(base64Data);
-
-
     const poses = net.estimateMultiplePoses(image, {
         maxDetections: 40,
         nmsRadius: 100
@@ -35,12 +32,10 @@ app.post('/sendFrame', function(req, res){
         console.log(new Date());
         res.end(JSON.stringify(poses));
     });
-
     
 });
 
-
-net = posenet.load({
+ posenet.load({
     architecture: "ResNet50",
     quantBytes: 1,
     outputStride: 16,
@@ -54,4 +49,3 @@ net = posenet.load({
     console.log("Simple static server listening at http://" + hostname + ":" + port);
     app.listen(port);
   });
-
