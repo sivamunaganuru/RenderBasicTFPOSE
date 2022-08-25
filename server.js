@@ -4,9 +4,6 @@ const tfjs = require('@tensorflow/tfjs-node');
 const toUint8Array = require('base64-to-uint8array');
 const base64_to_tensor = require('base64-to-tensor');
 
-var imageWidth = 320;
-var imageHeight = 200;
-
 var express = require("express");
 var app = express();
 var bodyParser = require('body-parser');
@@ -14,8 +11,10 @@ var hostname = process.env.HOSTNAME || 'localhost';
 var port = 8080;
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json());
-
 app.use(express.static(__dirname + '/public'));
+
+var imageWidth = 320;
+var imageHeight = 200;
 
 app.post('/sendFrame', function(req, res){
     var base64Data = decodeURIComponent(req.body[Object.keys(req.body)[0]]);
