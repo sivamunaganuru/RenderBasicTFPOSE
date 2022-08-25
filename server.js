@@ -10,12 +10,8 @@ var imageHeight = 240;
 var express = require("express");
 var app = express();
 var bodyParser = require('body-parser');
-
-var errorHandler = require('errorhandler');
-var methodOverride = require('method-override');
 var hostname = process.env.HOSTNAME || 'localhost';
 var port = 8080;
-
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json());
 
@@ -32,10 +28,9 @@ app.post('/sendFrame', function(req, res){
         console.log(new Date());
         res.end(JSON.stringify(poses));
     });
-    
 });
 
- posenet.load({
+posenet.load({
     architecture: "ResNet50",
     quantBytes: 1,
     outputStride: 16,
@@ -48,4 +43,4 @@ app.post('/sendFrame', function(req, res){
     console.log(net);
     console.log("Simple static server listening at http://" + hostname + ":" + port);
     app.listen(port);
-  });
+});
